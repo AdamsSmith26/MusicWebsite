@@ -161,6 +161,7 @@ const makeAllBackground = () => {
 
 let index = 0;
 let poster_master_play = document.getElementById("poster_master_play");
+let download_music = document.getElementById("download_music");
 let title = document.getElementById("title");
 
 Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
@@ -171,7 +172,7 @@ Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
     music.play();
     masterPlay.classList.remove("bi-play-fill");
     masterPlay.classList.add("bi-pause-fill");
-
+    download_music.href = `music/${index}.mp3`;
     let songTitles = songs.filter((els) => {
       return els.id == index;
     });
@@ -179,6 +180,7 @@ Array.from(document.getElementsByClassName("playListPlay")).forEach((e) => {
     songTitles.forEach((elss) => {
       let { songName } = elss;
       title.innerHTML = songName;
+      download_music.setAttribute('download', songName);
     });
 
     makeAllBackground();
@@ -260,9 +262,12 @@ vol.addEventListener("change", () => {
 
 let back = document.getElementById("back");
 let next = document.getElementById("next");
-
+index = Array.from(document.getElementsByClassName('songItem')).length;
 back.addEventListener("click", () => {
   index -= 1;
+  if (index < 1){
+    index = Array.from(document.getElementsByClassName('songItem')).length;
+  }
   music.src = `music/${index}.mp3`;
   poster_master_play.src = `img/${index}.jpg`;
   music.play();
@@ -290,6 +295,9 @@ back.addEventListener("click", () => {
 
 next.addEventListener("click", () => {
   index += 1;
+  if (index > Array.from(document.getElementsByClassName('songItem')).length) {
+    index = 1;
+  };
   music.src = `music/${index}.mp3`;
   poster_master_play.src = `img/${index}.jpg`;
   music.play();
@@ -315,6 +323,8 @@ next.addEventListener("click", () => {
   wave.classList.add("active1");
 });
 
+
+
 let pop_song_left = document.getElementById("pop_song_left");
 let pop_song_right = document.getElementById("pop_song_right");
 let pop_song = document.getElementsByClassName("pop_song")[0];
@@ -336,3 +346,36 @@ pop_art_right.addEventListener("click", () => {
 pop_art_left.addEventListener("click", () => {
   item.scrollLeft -= 330;
 });
+
+let shuffle = document.getElementsByClassName('shuffle')[0];
+
+shuffle.addEventListener('click', () => {
+    let a = shuffle.innerHTML;
+
+    switch (a) {
+        case "next":
+            shuffle.classList.add('bi-repeat');
+            shuffle.classList.remove('bi-music-note-beamed');
+            shuffle.classList.remove('bi-shuffle');
+            shuffle.innerHTML = 'repeat';
+            break;
+    
+        case "repeat":
+            shuffle.classList.remove('bi-repeat');
+            shuffle.classList.remove('bi-music-note-beamed');
+            shuffle.classList.add('bi-shuffle');
+            shuffle.innerHTML = 'random';
+            break;
+
+        case "random":
+            shuffle.classList.remove('bi-repeat');
+            shuffle.classList.add('bi-music-note-beamed');
+            shuffle.classList.remove('bi-shuffle');
+            shuffle.innerHTML = 'next';
+            break;
+    }
+});
+
+music.addEventListener('ended', () => {
+    
+})
